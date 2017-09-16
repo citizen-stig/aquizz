@@ -1,0 +1,2 @@
+class QuizException(Exception):
+    pass
