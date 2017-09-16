@@ -1,9 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-trash/TODO.md
-aquizz/
-trash/base.csv
-manage.py
 ### macOS template
 # General
 .DS_Store
@@ -185,4 +181,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-trash
+trash/
