@@ -1,6 +1,16 @@
 from flask import request, redirect, url_for
+from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.mongoengine import ModelView
-from flask_security import current_user
+from flask_security import current_user, login_required, roles_required
+
+
+class AdminProtectedIndexView(AdminIndexView):
+
+    @expose()
+    @login_required
+    @roles_required('admin')
+    def index(self):
+        return super().index()
 
 
 class AdminProtectedModelView(ModelView):
@@ -24,6 +34,5 @@ class QuestionAdminView(AdminProtectedModelView):
                     'form_columns': ('value', 'is_correct')
                 }
             }
-
         }
     }
