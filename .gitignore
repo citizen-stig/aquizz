@@ -182,3 +182,4 @@ venv.bak/
 .mypy_cache/
 
 trash/
+node_modules/

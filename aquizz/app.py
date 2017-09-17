@@ -36,6 +36,11 @@ def create_app():
     @app.route('/')
     def home():
         return 'Hello World!'
+    if app.config['DEBUG']:
+        @app.after_request
+        def allow_standalone_client(response):
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
 
     Security(app, user_datastore)
     setup_admin(app)

@@ -37,7 +37,7 @@ class QuizListResource(Resource):
             questions.append({
                 'id': str(question.id),
                 'text': question.text,
-                'variants': [x.value for x in question.options]
+                'options': [x.value for x in question.options]
             })
             item = models.Item(question=question)
             quiz.items.append(item)
