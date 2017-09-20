@@ -2,37 +2,30 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import Question from './question';
+import Loader from './loader';
 
 class Quiz extends Component {
   static propTypes = {
-    questions: PropTypes.object,
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentQuestion: 0,
-    }
+    isLoading: PropTypes.bool,
+    currentQuestion: PropTypes.object,
+    completed: PropTypes.bool,
+    sendAnswer: PropTypes.func.isRequired,
   }
 
   handleSelectedOption = option => {
-    console.log('aaaa: ' + option);
-    this.setState({
-      currentQuestion: this.state.currentQuestion + 1
-    });
+    this.props.sendAnswer(this.props.currentQuestion.get('id'), option);
   }
 
   render() {
-    if (this.state.currentQuestion >= this.props.questions.size) {
+    if (this.props.completed) {
       return (<p>Completed!</p>);
     }
-    const question = this.props.questions.get(this.state.currentQuestion);
     return (<div>
-        <p>Quesion: {this.state.currentQuestion + 1}</p>
+        {this.props.isLoading ? <Loader/> : null}
         <Question
-          key={question.get('text')}
-          questionText={question.get('text')}
-          options={question.get('options')}
+          key={this.props.currentQuestion.get('text')}
+          questionText={this.props.currentQuestion.get('text')}
+          options={this.props.currentQuestion.get('options')}
           selectOption={this.handleSelectedOption}
         />
       </div>
