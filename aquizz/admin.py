@@ -1,6 +1,6 @@
 from flask import request, redirect, url_for
 from flask_admin import AdminIndexView, expose
-from flask_admin.contrib.mongoengine import ModelView
+from flask_admin.contrib.mongoengine import ModelView, filters
 from flask_security import current_user, login_required, roles_required
 
 
@@ -27,6 +27,7 @@ class AdminProtectedModelView(ModelView):
 
 class QuestionAdminView(AdminProtectedModelView):
     column_list = ('text', 'options')
+    column_filters = ('text',)
     form_subdocuments = {
         'options': {
             'form_subdocuments': {

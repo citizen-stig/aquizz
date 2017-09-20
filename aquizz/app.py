@@ -25,13 +25,6 @@ def create_app():
 
     app.config.from_object(config_obj)
     db.init_app(app)
-    # FIXME: Workaround for flask-mongoengine 0.8 issue
-    # https://github.com/MongoEngine/flask-mongoengine/issues/259
-    # mongodb_settings = app.config['MONGODB_SETTINGS']
-    # if mongodb_settings.get('username') and mongodb_settings.get('password'):
-    #     app.before_first_request(
-    #         lambda: db.connection.authenticate(mongodb_settings.get('username'),
-    #                                            mongodb_settings.get('password')))
 
     @app.route('/')
     def home():
@@ -40,6 +33,7 @@ def create_app():
         @app.after_request
         def allow_standalone_client(response):
             response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
             return response
 
     Security(app, user_datastore)

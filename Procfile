@@ -1,0 +1,1 @@
+web: gunicorn --config aquizz/gunicorn.conf.py --workers=1 --log-file=- aquizz.wsgi:app
