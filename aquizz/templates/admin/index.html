@@ -1,0 +1,31 @@
+{% extends "admin/master.html" %}
+
+{% block body %}
+<div class="container">
+  <div class="row">
+    <h1>Hello!</h1>
+    <table class="table table-sm table-hover">
+      <thead>
+      <tr>
+        <th>Item</th>
+        <th>Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Total Questions</td>
+        <td>{{ all_questions_count }}</td>
+      </tr>
+      <tr>
+        <td>Ready</td>
+        <td>{{ ready_questions_count }}</td>
+      </tr>
+      <tr>
+        <td>Incomplete</td>
+        <td><a href="{{ url_for('question.index_view') }}?flt1_7=4">{{ incomplete_questions_count }}</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
