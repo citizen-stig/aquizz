@@ -23,6 +23,7 @@ class ItemSchema(Schema):
 
 
 class QuizListResource(Resource):
+    size = 10
 
     def get(self):
         return {
@@ -30,10 +31,12 @@ class QuizListResource(Resource):
         }
 
     def post(self):
-        all_questions = list(models.Question.objects())
+        all_questions = list(models.Question.objects(__raw__={'$where': 'this.options.length >= 4'}))
         quiz = models.Quiz()
         questions = []
-        for question in random.sample(all_questions, 10):
+        if len(all_questions) < self.size:
+            return abort(500)
+        for question in random.sample(all_questions, self.size):
             questions.append({
                 'id': str(question.id),
                 'text': question.text,
@@ -53,12 +56,15 @@ class QuizResource(Resource):
     @use_args(ItemSchema(strict=True))
     def post(self, args, quiz_id):
         quiz = models.Quiz.objects.get_or_404(pk=quiz_id)
+        question_id = ObjectId(args['question_id'])
         try:
-            is_correct = quiz.check_answer(
-                ObjectId(args['question_id']),
-                args['answer'])
+            is_correct = quiz.check_answer(question_id, args['answer'])
         except exc.QuizException as e:
             return abort(400, message=str(e))
         if is_correct is None:
             return abort(404, message='Question not found in quiz')
-        return {'is_correct': is_correct}
+        correct_options = quiz.get_correct_options(question_id)
+        return {
+            'is_correct': is_correct,
+            'correct_options': [x.value for x in correct_options]
+        }

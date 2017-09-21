@@ -24,16 +24,18 @@ class Question(db.Document):
     def __str__(self):
         return self.text
 
+    def get_correct_options(self):
+        return (x for x in self.options if x.is_correct)
+
     def is_answer_correct(self, value):
-        correct_options = [x.value for x in self.options if x.is_correct]
-        return value in correct_options
+        return value in self.get_correct_options()
 
 
 class Item(db.EmbeddedDocument):
     question = db.ReferenceField(Question, required=True)
-    # chosen_variants = db.ListField(db.EmbeddedDocumentField(Variant))
     answer = db.StringField(required=False)
     points = db.IntField(min_value=0, max_value=100)
+    answered_at = db.DateTimeField(required=False)
 
 
 class Quiz(db.Document):
@@ -49,8 +51,14 @@ class Quiz(db.Document):
                 if item.answer:
                     raise exc.QuizException('Question already answered')
                 item.answer = value
+                item.answered_at = datetime.utcnow()
                 item.save()
                 return item.question.is_answer_correct(value)
+
+    def get_correct_options(self, question_id):
+        for item in self.items:
+            if item.question.id == question_id:
+                return item.question.get_correct_options()
 
 
 ##########################################

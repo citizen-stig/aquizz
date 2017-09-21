@@ -14,7 +14,7 @@ class Question extends Component {
       <div className="row">
         {this.props.options.map(option => {
           return (
-            <div key={option} className="col-6">
+            <div key={option} className="col-xs-12 col-sm-6 option-container">
               <button className="btn btn-secondary btn-block"
                       onClick={() => this.props.selectOption(option)}>
                 {option}
