@@ -12,7 +12,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    sendAnswer: (questionId, answer) => dispatch(actions.sendAnswer(questionId, answer))
+    sendAnswer: (questionId, answer) => dispatch(actions.sendAnswer(questionId, answer)),
+    nextQuestion: () => dispatch(actions.nextQuestion()),
   }
 };
 

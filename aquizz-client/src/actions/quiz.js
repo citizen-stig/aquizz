@@ -15,7 +15,12 @@ export const startQuiz = playerName => {
 };
 
 const __sendAnswer = () => ({ type: types.SEND_ANSWER});
-const __sendAnswerSuccess = isCorrect => ({ type: types.SEND_ANSWER_SUCCESS, isCorrect});
+const __sendAnswerSuccess = (isCorrect, userSelected, correctOptions) => ({
+  type: types.SEND_ANSWER_SUCCESS,
+  isCorrect,
+  userSelected,
+  correctOptions,
+});
 const __sendAnswerError = error => ({ type: types.SEND_ANSWER_ERROR, error});
 
 export const sendAnswer = (questionId, answer) => {
@@ -23,7 +28,7 @@ export const sendAnswer = (questionId, answer) => {
     const quizId = s().quiz.get('quiz');
     d(__sendAnswer());
     return api.sendAnswer(quizId, questionId, answer)
-      .then(response => d(__sendAnswerSuccess(response.body['is_correct'])))
+      .then(response => d(__sendAnswerSuccess(response.body['is_correct'], answer, response.body['correct_options'])))
       .catch(response => {
         d(__sendAnswerError('Something...'));
       });
@@ -31,3 +36,4 @@ export const sendAnswer = (questionId, answer) => {
   }
 };
 
+export const nextQuestion = () => ({ type: types.NEXT_QUESTION });

@@ -23,21 +23,22 @@ class Intro extends Component {
   }
 
   render() {
-    return (<div className="row">
-      <div className="col-12 text-center">
-        <h1>Hello!</h1>
+    return (<div className="row quiz-intro-container">
+      <div className="col-12 text-center quiz-intro">
+        <h1>Welcome!</h1>
+        <p><small>Test your knowledge of extensively used acronyms!</small></p>
         <form onSubmit={this.submitForm} method="post">
           <div className="form-group">
-            <label htmlFor="player-name">Enter your name</label>
+            <label htmlFor="player-name">Enter your full name or login</label>
             <input type="text"
                    className="form-control"
                    id="player-name"
                    name="player-name"
-                   placeholder="optional"
+                   placeholder="Optional"
                    onChange={this.updateName}
             />
           </div>
-          <button type="submit" className="btn btn-primary">start quiz</button>
+          <button type="submit" className="btn btn-primary">Start Quiz</button>
         </form>
       </div>
     </div>);

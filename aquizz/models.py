@@ -28,7 +28,7 @@ class Question(db.Document):
         return (x for x in self.options if x.is_correct)
 
     def is_answer_correct(self, value):
-        return value in self.get_correct_options()
+        return value in (x.value for x in self.get_correct_options())
 
 
 class Item(db.EmbeddedDocument):
@@ -60,8 +60,15 @@ class Quiz(db.Document):
             if item.question.id == question_id:
                 return item.question.get_correct_options()
 
+    def check_if_completed(self):
+        unanswered_questions = sum(1 for x in self.items if x.answered_at is None)
+        is_completed = unanswered_questions == 0
+        if is_completed and self.finished_at is None:
+            self.finished_at = datetime.utcnow()
+            self.save()
 
-##########################################
+
+###################################
 class Role(db.Document, RoleMixin):
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)

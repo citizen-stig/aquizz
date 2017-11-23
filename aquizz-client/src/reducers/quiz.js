@@ -13,6 +13,7 @@ const initialState = fromJS({
 });
 
 export default (state = initialState, action) => {
+  const currentQuestionIdx = state.get('currentQuestion', 0);
   switch (action.type) {
     case types.START_QUIZ:
       return state.mergeDeep({
@@ -38,23 +39,26 @@ export default (state = initialState, action) => {
         error: null,
       });
     case types.SEND_ANSWER_SUCCESS:
-      const currentQuestion = state.get('currentQuestion');
+      const currentQuestion = state.getIn(['questions', currentQuestionIdx]).mergeDeep({
+        isAnswered: true,
+        isCorrect: action.isCorrect,
+        correctOptions: action.correctOptions,
+        userSelected: action.userSelected,
+      });
       return state
         .mergeDeep({
           isLoading: false,
           error: null,
+          completed: currentQuestionIdx === state.get('questions').size - 1,
         })
-        .setIn(['questions', currentQuestion, 'isCorrect'], action.isCorrect)
-        .mergeDeep({
-          currentQuestion: currentQuestion + 1,
-          completed: currentQuestion === state.get('questions').size - 1,
-        });
-
+        .setIn(['questions', currentQuestionIdx], currentQuestion);
     case types.SEND_ANSWER_ERROR:
       return state.mergeDeep({
         isLoading: false,
         error: action.error,
       });
+    case types.NEXT_QUESTION:
+      return state.set('currentQuestion', currentQuestionIdx + 1);
     default:
       return state;
   }

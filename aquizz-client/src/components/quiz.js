@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Question from './question';
 import Loader from './loader';
+import Completion from '../containers/completion';
 
 class Quiz extends Component {
   static propTypes = {
@@ -18,16 +19,17 @@ class Quiz extends Component {
 
   render() {
     if (this.props.completed) {
-      return (<p>Completed!</p>);
+      return (<Completion/>);
     }
     return (<div>
         {this.props.isLoading ? <Loader/> : null}
         <Question
-          key={this.props.currentQuestion.get('text')}
-          questionText={this.props.currentQuestion.get('text')}
-          options={this.props.currentQuestion.get('options')}
+          key={this.props.currentQuestion.get('id')}
+          question={this.props.currentQuestion}
           selectOption={this.handleSelectedOption}
         />
+        {this.props.currentQuestion.get('isAnswered') &&
+          <button className="btn btn-warning btn-block btn-lg" onClick={this.props.nextQuestion}>Next</button>}
       </div>
     );
   }

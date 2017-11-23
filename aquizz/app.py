@@ -1,7 +1,7 @@
 import importlib
 import os
 
-from flask import Flask
+from flask import Flask, send_file
 from flask_admin import Admin
 from flask_restful import Api
 from flask_security import Security
@@ -14,7 +14,7 @@ from aquizz.api import QuizListResource, QuizResource
 
 
 def create_app():
-    app = Flask(__name__)
+
     settings = os.getenv('FLASK_SETTINGS', 'develop')
     try:
         config_module = importlib.import_module('aquizz.settings.' + settings)
@@ -22,13 +22,13 @@ def create_app():
     except (ImportError, AttributeError):
         config_module = importlib.import_module('aquizz.settings.' + 'develop')
         config_obj = config_module.Config
-
+    app = Flask(__name__, static_folder=config_obj.STATIC_FOLDER)
     app.config.from_object(config_obj)
     db.init_app(app)
 
     @app.route('/')
     def home():
-        return 'Hello World!'
+        return send_file(os.path.join(app.config['CLIENT_BUILD_FOLDER'], 'index.html'))
     if app.config['DEBUG']:
         @app.after_request
         def allow_standalone_client(response):
