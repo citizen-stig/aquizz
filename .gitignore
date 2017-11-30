@@ -183,3 +183,4 @@ venv.bak/
 
 trash/
 node_modules/
+src/config.json

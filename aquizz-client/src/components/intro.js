@@ -38,7 +38,7 @@ class Intro extends Component {
                    onChange={this.updateName}
             />
           </div>
-          <button type="submit" className="btn btn-primary">Start Quiz</button>
+          <button type="submit" className="btn-lg btn-primary">Start Quiz</button>
         </form>
       </div>
     </div>);

@@ -1,7 +1,7 @@
 import req from 'superagent';
 
+const  API_PATH = '/api/v1';
 
-const API_PATH = 'http://localhost:5000/api/v1';
 
 export const startQuiz = playerName => {
   return req.post(`${API_PATH}/quiz`).send({player_name: playerName});
