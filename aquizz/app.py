@@ -29,6 +29,11 @@ def create_app():
     @app.route('/')
     def home():
         return send_file(os.path.join(app.config['CLIENT_BUILD_FOLDER'], 'index.html'))
+
+    @app.route('/favicon')
+    def favicon():
+        return send_file(os.path.join(app.config['CLIENT_BUILD_FOLDER'], 'favicon.ico'))
+
     if app.config['DEBUG']:
         @app.after_request
         def allow_standalone_client(response):
