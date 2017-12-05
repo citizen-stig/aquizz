@@ -37,6 +37,18 @@ class Item(db.EmbeddedDocument):
     points = db.IntField(min_value=0, max_value=100)
     answered_at = db.DateTimeField(required=False)
 
+    def __str__(self):
+        tick = ''
+        if self.answer:
+            is_correct = self.question.is_answer_correct(self.answer)
+            tick = '✔ ' if is_correct else '✗ '
+        return '{0}{1} => {2} @ {3} <br/>'.format(
+            tick,
+            self.question,
+            self.answer,
+            self.answered_at,
+        )
+
 
 class Quiz(db.Document):
     id = db.ObjectIdField(primary_key=True, default=ObjectId)

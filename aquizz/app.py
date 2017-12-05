@@ -8,8 +8,8 @@ from flask_security import Security
 
 
 from aquizz.models import db
-from aquizz.admin import AdminProtectedModelView, AdminProtectedIndexView, QuestionAdminView
-from aquizz.models import Question, User, user_datastore
+from aquizz.admin import AdminProtectedModelView, AdminProtectedIndexView, QuestionAdminView, QuizAdminView
+from aquizz.models import Question, User, Quiz, user_datastore
 from aquizz.api import QuizListResource, QuizResource
 
 
@@ -53,6 +53,7 @@ def setup_admin(app):
                          template_mode='bootstrap3',
                          url='/admin')
     admin_portal.add_view(QuestionAdminView(Question))
+    admin_portal.add_view(QuizAdminView(Quiz))
     return admin_portal
 
 

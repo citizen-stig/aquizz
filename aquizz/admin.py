@@ -3,6 +3,7 @@ from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.mongoengine import ModelView, filters
 from flask_admin.babel import lazy_gettext
 from flask_security import current_user, login_required, roles_required
+from jinja2 import Markup
 
 
 from aquizz import models
@@ -37,11 +38,16 @@ class AdminProtectedIndexView(AdminIndexView):
     @login_required
     @roles_required('admin')
     def index(self):
+        # Questions
         self._template_args['all_questions_count'] = models.Question.objects().count()
         self._template_args['ready_questions_count'] = models.Question.objects(
             __raw__={'$where': 'this.options.length >= 4'}).count()
         self._template_args['incomplete_questions_count'] = models.Question.objects(
             __raw__={'$where': 'this.options.length < 4'}).count()
+        # Quizzes
+        self._template_args['total_quizzes_count'] = models.Quiz.objects.count()
+        self._template_args['completed_quizzes_count'] = models.Quiz.objects(
+            finished_at__ne='').count()
         return super().index()
 
 
@@ -73,3 +79,28 @@ class QuestionAdminView(AdminProtectedModelView):
             }
         }
     }
+
+
+def list_br_formatter(view, values):
+    return Markup('<br/>'.join((str(x) for x in values)))
+
+
+class QuizAdminView(AdminProtectedModelView):
+    can_create = False
+    can_edit = False
+    can_delete = True
+    can_view_details = True
+    column_details_list = (
+        'started_at',
+        'finished_at',
+        'player_name',
+        'items'
+    )
+    column_type_formatters = {
+        list: list_br_formatter
+    }
+    column_filters = (
+        'started_at',
+        'finished_at',
+        'player_name',
+    )
