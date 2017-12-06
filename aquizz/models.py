@@ -52,7 +52,7 @@ class Item(db.EmbeddedDocument):
 
 class Quiz(db.Document):
     id = db.ObjectIdField(primary_key=True, default=ObjectId)
-    started_at = db.DateTimeField(required=True, default=datetime.utcnow())
+    started_at = db.DateTimeField(required=True, default=datetime.utcnow)
     finished_at = db.DateTimeField(required=False, default=None)
     player_name = db.StringField(required=False, default='Anonymous')
     items = db.ListField(db.EmbeddedDocumentField(Item))

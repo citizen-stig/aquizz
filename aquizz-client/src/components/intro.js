@@ -34,12 +34,15 @@ class Intro extends Component {
                    className="form-control"
                    id="player-name"
                    name="player-name"
-                   placeholder="Optional"
+                   placeholder="Name/Login/Whatever"
                    onChange={this.updateName}
             />
           </div>
           <button type="submit" className="btn-lg btn-primary">Start Quiz</button>
         </form>
+        <div className="alert alert-info intro-description" role="alert">
+          <small>This quiz is highly subjective and doesn't claim to be ground truth for anything. Just enjoy.</small>
+        </div>
       </div>
     </div>);
   }

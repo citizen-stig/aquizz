@@ -30,7 +30,7 @@ def create_app():
     def home():
         return send_file(os.path.join(app.config['CLIENT_BUILD_FOLDER'], 'index.html'))
 
-    @app.route('/favicon')
+    @app.route('/favicon.ico')
     def favicon():
         return send_file(os.path.join(app.config['CLIENT_BUILD_FOLDER'], 'favicon.ico'))
 

@@ -11,7 +11,8 @@ export const startQuiz = playerName => {
     d(__startQuiz());
     return api.startQuiz(playerName)
       .then(response => d(__startQuizSuccess(response.body['id'], response.body['questions'])))
-      .catch(err => d(__startQuizError(err)))}
+      .catch(err => d(__startQuizError(err)))
+  }
 };
 
 const __sendAnswer = () => ({ type: types.SEND_ANSWER});
