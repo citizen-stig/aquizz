@@ -32,6 +32,7 @@ class Completion extends Component {
   static propTypes = {
     correctNumber: PropTypes.number,
     correctPercentage: PropTypes.number,
+    restartQuiz: PropTypes.func,
   }
 
   render() {
@@ -63,8 +64,10 @@ class Completion extends Component {
       <div className="row">
         <div className="col-12">
           <img className="rounded complete-reaction" src={gif} alt={shortMessage}/>
-          <div className={cn('alert', 'complete-message', alertClass)} role="alert">
-            <strong>{shortMessage}</strong> {longMessage}
+          <div className={cn('alert', 'complete-message', alertClass)}
+               role="alert"
+               onClick={this.props.restartQuiz}>
+            <strong>{shortMessage}</strong> {longMessage} Repeat?
           </div>
         </div>
       </div>

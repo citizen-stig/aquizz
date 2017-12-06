@@ -15,6 +15,16 @@ export const startQuiz = playerName => {
   }
 };
 
+const __resetQuiz = () => ({ type: types.RESET_QUIZ });
+
+export const restartQuiz = () => {
+  return (d, s) => {
+    const playerName = s().quiz.get('playerName');
+    d(__resetQuiz());
+    return startQuiz(playerName)(d);
+  }
+};
+
 const __sendAnswer = () => ({ type: types.SEND_ANSWER});
 const __sendAnswerSuccess = (isCorrect, userSelected, correctOptions) => ({
   type: types.SEND_ANSWER_SUCCESS,

@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-image: url("http://res.cloudinary.com/citizenstig/image/upload/v1512586577/background_rgwfs2.jpg");
+  background: url("http://res.cloudinary.com/citizenstig/image/upload/v1512586577/background_rgwfs2.jpg") no-repeat;
 }
 
 /* Loader */
@@ -69,6 +69,7 @@ body {
 .complete-message {
   margin: auto;
   width: 60%;
+  cursor: pointer;
 }
 
 
@@ -81,7 +82,7 @@ body {
     width: 80%;
   }
   .quiz-intro-container {
-    margin-top: 80px;
+    margin-top: 3rem;
   }
 
 }
@@ -102,7 +103,7 @@ body {
 }
 
 .intro-description {
-  margin-top: 10px;
+  margin-top: 1rem;
   color: #212529;
   background-color: rgba(209, 236, 241, 0.5);
 }

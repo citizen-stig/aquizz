@@ -2,6 +2,7 @@
 export const START_QUIZ = 'START_QUIZ';
 export const START_QUIZ_SUCCESS = 'START_QUIZ_SUCCESS';
 export const START_QUIZ_ERROR = 'START_QUIZ_ERROR';
+export const RESET_QUIZ = 'RESET_QUIZ';
 
 export const NEXT_QUESTION = 'NEXT_QUESTION';
 

@@ -59,6 +59,8 @@ export default (state = initialState, action) => {
       });
     case types.NEXT_QUESTION:
       return state.set('currentQuestion', currentQuestionIdx + 1);
+    case types.RESET_QUIZ:
+      return initialState.set('isLoading', true);
     default:
       return state;
   }

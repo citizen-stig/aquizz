@@ -2,6 +2,12 @@ import { connect } from 'react-redux'
 import * as actions from '../actions/quiz'
 import Intro from '../components/intro';
 
+const mapStateToProps = state => {
+  return {
+    isLoading: state.quiz.get('isLoading'),
+  };
+};
+
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -9,4 +15,4 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-export default connect(null, mapDispatchToProps)(Intro);
+export default connect(mapStateToProps, mapDispatchToProps)(Intro);

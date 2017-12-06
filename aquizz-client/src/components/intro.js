@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import Loader from './loader';
+
 class Intro extends Component {
   static propTypes = {
     startQuiz: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool,
   }
 
   constructor(props) {
@@ -24,6 +27,8 @@ class Intro extends Component {
 
   render() {
     return (<div className="row quiz-intro-container">
+      {this.props.isLoading ?
+        <Loader/> :
       <div className="col-12 text-center quiz-intro">
         <h1>Welcome!</h1>
         <p><small>Test your knowledge of extensively used acronyms!</small></p>
@@ -34,16 +39,16 @@ class Intro extends Component {
                    className="form-control"
                    id="player-name"
                    name="player-name"
-                   placeholder="Name/Login/Whatever"
                    onChange={this.updateName}
             />
           </div>
           <button type="submit" className="btn-lg btn-primary">Start Quiz</button>
         </form>
-        <div className="alert alert-info intro-description" role="alert">
+        <div className="alert intro-description" role="alert">
           <small>This quiz is highly subjective and doesn't claim to be ground truth for anything. Just enjoy.</small>
         </div>
       </div>
+      }
     </div>);
   }
 }
