@@ -97,11 +97,12 @@ body {
 }
 
 .complete-reaction {
-  margin: 0px 20px 20px 20px;
+  margin: 0 20px 20px 20px;
   max-width: 80%;
 }
 
 .intro-description {
   margin-top: 10px;
+  color: #212529;
   background-color: rgba(209, 236, 241, 0.5);
 }

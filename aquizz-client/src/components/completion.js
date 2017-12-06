@@ -39,7 +39,7 @@ class Completion extends Component {
     if (this.props.correctPercentage >= 90) {
       gif = selectRandom(success_reactions);
       shortMessage = 'Well done!';
-      longMessage = 'Great!!!!';
+      longMessage = 'Great!!!';
       alertClass = 'alert-success';
     } else if (this.props.correctPercentage < 90 && this.props.correctPercentage >= 70) {
       gif = selectRandom(ok_reactions);
