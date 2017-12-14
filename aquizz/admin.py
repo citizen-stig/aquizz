@@ -96,6 +96,7 @@ class QuizAdminView(AdminProtectedModelView):
         'player_name',
         'items'
     )
+    column_default_sort = ('started_at', True)
     column_type_formatters = {
         list: list_br_formatter
     }
