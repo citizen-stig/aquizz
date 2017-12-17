@@ -37,11 +37,13 @@ class Item(db.EmbeddedDocument):
     points = db.IntField(min_value=0, max_value=100)
     answered_at = db.DateTimeField(required=False)
 
+    def is_correct(self):
+        return self.question.is_answer_correct(self.answer)
+
     def __str__(self):
         tick = ''
         if self.answer:
-            is_correct = self.question.is_answer_correct(self.answer)
-            tick = '✔ ' if is_correct else '✗ '
+            tick = '✔ ' if self.is_correct() else '✗ '
         return '{0}{1} => {2} @ {3} <br/>'.format(
             tick,
             self.question,

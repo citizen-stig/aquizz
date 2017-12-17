@@ -1,52 +1,112 @@
 {% extends "admin/master.html" %}
 
 {% block body %}
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-sm-6" }>
-      <table class="table table-sm table-hover">
-        <thead>
-        <tr>
-          <th>Item</th>
-          <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Total Questions</td>
-          <td>{{ all_questions_count }}</td>
-        </tr>
-        <tr>
-          <td>Ready</td>
-          <td>{{ ready_questions_count }}</td>
-        </tr>
-        <tr>
-          <td>Incomplete</td>
-          <td><a href="{{ url_for('question.index_view') }}?flt1_7=4">{{ incomplete_questions_count }}</a></td>
-        </tr>
-        </tbody>
-      </table>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <table class="table table-sm table-hover">
+          <thead>
+          <tr>
+            <th>Item</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Total Questions</td>
+            <td>{{ all_questions_count }}</td>
+          </tr>
+          <tr>
+            <td>Ready</td>
+            <td>{{ ready_questions_count }}</td>
+          </tr>
+          <tr>
+            <td>Incomplete</td>
+            <td><a href="{{ url_for('question.index_view') }}?flt1_7=4">{{ incomplete_questions_count }}</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <table class="table table-sm table-hover">
+          <thead>
+          <tr>
+            <th>Item</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Total Quizzes</td>
+            <td>{{ total_quizzes_count }}</td>
+          </tr>
+          <tr>
+            <td>Completed</td>
+            <td>{{ completed_quizzes_count }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="col-xs-12 col-sm-6" }>
-      <table class="table table-sm table-hover">
-        <thead>
-        <tr>
-          <th>Item</th>
-          <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Total Quizzes</td>
-          <td>{{ total_quizzes_count }}</td>
-        </tr>
-        <tr>
-          <td>Completed</td>
-          <td>{{ completed_quizzes_count }}</td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="row">
+      <div class="col-xs-12 col-sm-8">
+        <h4>Top 20 the most mistaken questions</h4>
+        <table class="table table-sm table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Mistakes</th>
+            <th>Chosen Options</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for item in hardest_questions %}
+            {% set question_data  = item[1] %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>
+                {{ item[0] }} <br/>
+                <small>{{ question_data.correct_options|join(', ') }}</small>
+              </td>
+              <td>{{ question_data.incorrect_count }} ({{ question_data.incorrect_ratio }})</td>
+              <td>
+                {% for option in question_data.incorrect_options.items() %}
+                  {{ option[0] }}: {{ option[1] }}<br/>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <h4>Top 10 the simplest questions</h4>
+        <table class="table table-sm table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Answers</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for item in simplest_questions %}
+            {% set question_data  = item[1] %}
+            <tr>
+              <td>
+                {{ loop.index }}
+              </td>
+              <td>
+                {{ item[0] }} <br/>
+                <small>{{ question_data.correct_options|join(', ') }}</small>
+              </td>
+              <td>{{ question_data.correct_count }} ({{ question_data.correct_ratio }})</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
 {% endblock %}

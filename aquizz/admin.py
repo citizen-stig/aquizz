@@ -1,3 +1,5 @@
+from collections import defaultdict, OrderedDict
+
 from flask import request, redirect, url_for
 from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.mongoengine import ModelView, filters
@@ -31,6 +33,8 @@ class FilterArrayLengthLower(FilterArrayBaseLength):
 class FilterArrayLengthHigherOrEqual(FilterArrayBaseLength):
     operator = '>='
 
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 class AdminProtectedIndexView(AdminIndexView):
 
@@ -38,6 +42,70 @@ class AdminProtectedIndexView(AdminIndexView):
     @login_required
     @roles_required('admin')
     def index(self):
+        correct_answers = defaultdict(int)
+        incorrect_answers = {}
+        completed_quizzes = models.Quiz.objects(finished_at__ne='')
+        all_questions = {}
+        for quiz in completed_quizzes:
+            for item in quiz.items:
+                question_text = item.question.text
+                if question_text not in all_questions:
+                    all_questions[question_text] = item.question.get_correct_options()
+                if item.is_correct():
+                    correct_answers[question_text] += 1
+                else:
+                    if question_text not in incorrect_answers:
+                        incorrect_answers[question_text] = {
+                            x.value: 0 for x in item.question.options
+                        }
+                    if item.answer not in incorrect_answers[question_text]:
+                        # print('Error: {0}'.format(item))
+                        continue
+                    incorrect_answers[question_text][item.answer] += 1
+        data = {}
+        for question, correct_options in all_questions.items():
+            incorrect = incorrect_answers.get(question)
+            if incorrect is None:
+                incorrect_count = 0
+                incorrect_options = None
+            else:
+                incorrect_count = sum(incorrect.values())
+                incorrect_options = OrderedDict(
+                    sorted(((q, o) for q, o in incorrect.items() if o > 0),
+                           key=lambda x: x[1],
+                           reverse=True))
+            incorrect_ratio = 0
+            correct_count = correct_answers.get(question, 0)
+            correct_ratio = 0
+            total = incorrect_count + correct_count
+            if correct_count > 0:
+                correct_ratio = float(correct_count) / float(total)
+            if incorrect_count > 0:
+                incorrect_ratio = float(incorrect_count) / float(total)
+            data[question] = {
+                'total': total,
+                'correct_count': correct_count,
+                'correct_ratio': "{0:.0f}%".format(correct_ratio * 100.0),
+                'correct_options': correct_options,
+                'incorrect_count': incorrect_count,
+                'incorrect_ratio': "{0:.0f}%".format(incorrect_ratio * 100.0),
+                'incorrect_options': incorrect_options,
+            }
+        questions_analysis = list(
+            sorted(
+                data.items(),
+                key=lambda x: x[1].get('incorrect_count'),
+                reverse=True
+            ))
+        hardest_questions = questions_analysis[:20]
+        simplest_questions = list(
+            sorted(
+                questions_analysis,
+                key=lambda x: x[1].get('correct_count'),
+                reverse=True)
+        )[:10]
+        self._template_args['hardest_questions'] = hardest_questions
+        self._template_args['simplest_questions'] = simplest_questions
         # Questions
         self._template_args['all_questions_count'] = models.Question.objects().count()
         self._template_args['ready_questions_count'] = models.Question.objects(
