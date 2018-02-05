@@ -1,4 +1,6 @@
+import statistics
 from flask_script import Manager, Command, Option
+import numpy as np
 
 from aquizz import app as app_factory
 from aquizz import models
@@ -29,9 +31,25 @@ class LoadBaseQuestions(Command):
         utils.load_data_from_file(filename)
 
 
+class PrintStat(Command):
+
+    def run(self):
+        completed_quizzes = models.Quiz.objects()
+        scores = []
+        for quiz in completed_quizzes:
+            if quiz.finished_at:
+                scores.append(quiz.get_score())
+        # print(scores)
+        print('Avg: ', statistics.mean(scores))
+        print('Median:', statistics.median(scores))
+        a = np.array(scores)
+        print('p90:', np.percentile(a, 90))
+
+
 if __name__ == '__main__':
     app = app_factory.create_app()
     manager = Manager(app)
     manager.add_command('create_admin_user', CreateAdminUser())
     manager.add_command('load_base', LoadBaseQuestions())
+    manager.add_command('print_stat', PrintStat())
     manager.run()

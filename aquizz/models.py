@@ -81,6 +81,11 @@ class Quiz(db.Document):
             self.finished_at = datetime.utcnow()
             self.save()
 
+    def get_score(self) -> float:
+        correct_count = sum(1 for x in self.items if x.is_correct())
+        score = float(correct_count) / float(len(self.items))
+        return score
+
 
 ###################################
 class Role(db.Document, RoleMixin):
