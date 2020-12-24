@@ -1,14 +1,16 @@
+import pprint
 from collections import defaultdict, OrderedDict
 
 from flask import request, redirect, url_for
 from flask_admin import AdminIndexView, expose
-from flask_admin.contrib.mongoengine import ModelView, filters
 from flask_admin.babel import lazy_gettext
+from flask_admin.contrib.mongoengine import ModelView, filters
 from flask_security import current_user, login_required, roles_required
 from jinja2 import Markup
 
-
 from aquizz import models
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 class FilterArrayBaseLength(filters.BaseMongoEngineFilter):
@@ -33,8 +35,6 @@ class FilterArrayLengthLower(FilterArrayBaseLength):
 class FilterArrayLengthHigherOrEqual(FilterArrayBaseLength):
     operator = '>='
 
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
 class AdminProtectedIndexView(AdminIndexView):
 
@@ -50,7 +50,8 @@ class AdminProtectedIndexView(AdminIndexView):
             for item in quiz.items:
                 question_text = item.question.text
                 if question_text not in all_questions:
-                    all_questions[question_text] = item.question.get_correct_options()
+                    all_questions[
+                        question_text] = item.question.get_correct_options()
                 if item.is_correct():
                     correct_answers[question_text] += 1
                 else:
@@ -107,13 +108,16 @@ class AdminProtectedIndexView(AdminIndexView):
         self._template_args['hardest_questions'] = hardest_questions
         self._template_args['simplest_questions'] = simplest_questions
         # Questions
-        self._template_args['all_questions_count'] = models.Question.objects().count()
+        self._template_args[
+            'all_questions_count'] = models.Question.objects().count()
         self._template_args['ready_questions_count'] = models.Question.objects(
             __raw__={'$where': 'this.options.length >= 4'}).count()
-        self._template_args['incomplete_questions_count'] = models.Question.objects(
+        self._template_args[
+            'incomplete_questions_count'] = models.Question.objects(
             __raw__={'$where': 'this.options.length < 4'}).count()
         # Quizzes
-        self._template_args['total_quizzes_count'] = models.Quiz.objects.count()
+        self._template_args[
+            'total_quizzes_count'] = models.Quiz.objects.count()
         self._template_args['completed_quizzes_count'] = models.Quiz.objects(
             finished_at__ne='').count()
         return super().index()
@@ -136,7 +140,8 @@ class QuestionAdminView(AdminProtectedModelView):
     column_filters = (
         'text',
         FilterArrayLengthLower(column=models.Question.options, name='Options'),
-        FilterArrayLengthHigherOrEqual(column=models.Question.options, name='Options'),
+        FilterArrayLengthHigherOrEqual(column=models.Question.options,
+                                       name='Options'),
     )
     form_subdocuments = {
         'options': {

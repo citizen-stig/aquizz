@@ -1,20 +1,11 @@
-from bson import ObjectId
 import random
 
-from flask import jsonify
+from bson import ObjectId
 from flask_restful import Resource, abort
-from webargs.flaskparser import parser, use_args, use_kwargs
-from marshmallow import fields, validate, Schema, ValidationError
-
+from marshmallow import fields, Schema
+from webargs.flaskparser import use_args
 
 from aquizz import models, exc
-
-# API Endpoints
-# /quiz
-#   GET  => list of all past quizzes
-#   POST => creates new quiz in database, returns quiz_id, and list of questions
-# /quiz/<id>/
-#   POST => validates answer
 
 
 class NewQuizSchema(Schema):
@@ -61,7 +52,7 @@ class QuizListResource(Resource):
 
 class QuizResource(Resource):
 
-    @use_args(ItemSchema(strict=True))
+    @use_args(ItemSchema())
     def post(self, args, quiz_id):
         quiz = models.Quiz.objects.get_or_404(pk=quiz_id)
         question_id = ObjectId(args['question_id'])
