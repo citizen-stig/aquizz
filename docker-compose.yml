@@ -19,16 +19,3 @@ services:
       - mongodb
     depends_on:
       - mongodb
-# TEMP:
-#    ports:
-#      - 127.0.0.1:5000:5000
-#  nginx:
-#    image: nginx
-#    volumes:
-#      - "./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf"
-#    ports:
-#      - 0.0.0.0:80:80
-#    links:
-#      - app
-#    depends_on:
-#      - app
